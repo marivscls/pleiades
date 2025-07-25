@@ -1,0 +1,106 @@
+<section ngClass="h-screen flex justify-center items-center">
+  <div hlmCard ngClass="flex flex-col w-96 mx-16">
+    <div
+      hlmCardHeader
+      ngClass="flex justify-center items-center text-center w-full mb-2"
+    >
+      <h1 hlmCardTitle ngClass="text-erp-light-text-primary text-md font-black">
+        Pleiades
+      </h1>
+      <h2 hlmCardDescription ngClass="text-xs">
+        Bem-vindo de volta! Entre na sua conta para continuar.
+      </h2>
+    </div>
+    <div hlmCardContent ngClass="flex flex-col h-full">
+      <form
+        ngClass="space-y-5 h-full"
+        [formGroup]="loginForm"
+        (ngSubmit)="loginButtonClick()"
+      >
+        <div ngClass="flex flex-col">
+          <label
+            for="email"
+            hlmLabel
+            ngClass="font-semibold text-sm mb-1 text-erp-light-text-primary"
+            >E-mail</label
+          >
+          <input
+            formControlName="email"
+            hlmInput
+            id="email"
+            required
+            type="email"
+            [error]="email?.touched && email?.invalid"
+            (blur)="onBlur('email')"
+          />
+          @if (email?.touched && email?.invalid) {
+            <div ngClass="error-message text-xs text-red-700 mt-2">
+              @if (email?.errors?.["required"]) {
+                <p>E-mail é obrigatório.</p>
+              }
+              @if (email?.errors?.["email"]) {
+                <p>E-mail inválido.</p>
+              }
+            </div>
+          }
+        </div>
+        <div ngClass="flex flex-col pb-5">
+          <label
+            for="password"
+            hlmLabel
+            ngClass="font-semibold text-sm mb-1 text-erp-light-text-primary"
+            >Senha</label
+          >
+          <input
+            formControlName="password"
+            hlmInput
+            id="password"
+            required
+            type="password"
+            [error]="password?.touched && password?.invalid"
+            (blur)="onBlur('password')"
+          />
+          @if (password?.touched && password?.invalid) {
+            <div ngClass="error-message text-xs text-red-700 mt-2">
+              @if (password?.errors?.["required"]) {
+                <p>Senha é obrigatória.</p>
+              }
+            </div>
+          }
+        </div>
+        <button
+          hlmBtn
+          ngClass="flex justify-center items-center erp-button-gradient erp-button-shadow w-full"
+          type="submit"
+          [disabled]="isLoginButtonDisabled || (loading$ | async)"
+        >
+          <div ngClass="flex items-center mx-auto">
+            @if (loading$ | async) {
+              <div ngClass="default-loader"></div>
+            } @else {
+              <p ngClass="mr-2">Entrar</p>
+              <ng-icon name="lucideChevronRightSquare" size="sm" />
+            }
+          </div>
+        </button>
+
+        @if (error$ | async; as error) {
+          <h1 ngClass="text-sm text-center text-red-700">{{ error }}</h1>
+        }
+      </form>
+    </div>
+    <div
+      ngClass="flex justify-center items-center bg-gray-200 p-5 border-t border-solid border-slate-300"
+    >
+      <h1 ngClass="text-sm text-slate-500">
+        Não tem uma conta?
+        <button
+          ngClass="font-bold text-[#007FEF] hover:text-[#007ECF] cursor-pointer"
+          (click)="createAccountButtonClick()"
+        >
+          Criar conta
+        </button>
+      </h1>
+    </div>
+  </div>
+</section>

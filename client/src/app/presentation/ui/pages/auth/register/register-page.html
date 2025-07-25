@@ -1,0 +1,141 @@
+<section ngClass="flex h-screen items-center justify-center">
+  <div hlmCard ngClass="mx-16 flex w-96 flex-col">
+    <div
+      hlmCardHeader
+      ngClass="mb-2 flex w-full items-center justify-center text-center"
+    >
+      <h1 hlmCardTitle ngClass="text-erp-light-text-primary">
+        Crie a sua conta de Administrador
+      </h1>
+      <h2 hlmCardDescription ngClass="text-xs">
+        Bem-vindo! Por favor preencha os campos para realizar o seu cadastro.
+      </h2>
+    </div>
+    <div hlmCardContent ngClass="flex h-full flex-col">
+      <form
+        ngClass="h-full space-y-5"
+        [formGroup]="registerForm"
+        (ngSubmit)="registerButtonClick()"
+      >
+        <!-- E-mail -->
+        <div ngClass="flex flex-col">
+          <label
+            for="email"
+            hlmLabel
+            ngClass="text-erp-light-text-primary mb-1 text-sm font-semibold"
+            >E-mail</label
+          >
+          <input
+            formControlName="email"
+            hlmInput
+            id="email"
+            required
+            type="text"
+            [error]="email?.touched && email?.invalid"
+            (blur)="onBlur('email')"
+          />
+          @if (email?.touched && email?.invalid) {
+            <div ngClass="mt-2 text-xs text-red-700">
+              @if (email?.errors?.["required"]) {
+                <p>E-mail é obrigatório.</p>
+              }
+              @if (email?.errors?.["email"]) {
+                <p>E-mail inválido.</p>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Password -->
+        <div ngClass="flex flex-col relative">
+          <label
+            for="password"
+            hlmLabel
+            ngClass="text-erp-light-text-primary mb-1 text-sm font-semibold"
+            >Senha</label
+          >
+          <input
+            formControlName="password"
+            hlmInput
+            id="password"
+            ngClass="mb-2"
+            required
+            [error]="password?.touched && password?.invalid"
+            [type]="isPasswordVisible ? 'text' : 'password'"
+            (blur)="onBlur('password')"
+          />
+          <ng-icon
+            ngClass="absolute top-[25px] right-2 cursor-pointer text-erp-light-text-secondary"
+            size="medium"
+            [name]="isPasswordVisible ? 'lucideEyeOff' : 'lucideEye'"
+            (click)="togglePasswordVisibilityButtonClick()"
+          />
+          @for (criterion of passwordCriteria; track $index) {
+            <div
+              class="flex items-center text-xs"
+              [ngClass]="{
+                'text-erp-light-text-secondary':
+                  passwordErrors?.[criterion.key],
+                'text-green-600': !passwordErrors?.[criterion.key],
+              }"
+            >
+              <ng-icon
+                ngClass="mr-1"
+                size="xs"
+                [name]="
+                  passwordErrors?.[criterion.key] ? 'lucideX' : 'lucideCheck'
+                "
+              />
+              <p>{{ criterion.label }}</p>
+            </div>
+          }
+          @if (password?.touched && password?.invalid) {
+            <div ngClass="mt-2 text-xs text-red-700">
+              @if (password?.errors?.["required"]) {
+                <p>Senha é obrigatória.</p>
+              }
+
+              @if (password?.errors && !password?.errors?.["required"]) {
+                <p>A senha não cumpre com as condições necessárias.</p>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Submit -->
+        <button
+          hlmBtn
+          ngClass="erp-button-gradient erp-button-shadow flex w-full items-center justify-center"
+          type="submit"
+          [disabled]="isLoginButtonDisabled || (loading$ | async)"
+        >
+          <div ngClass="mx-auto flex items-center">
+            @if (loading$ | async) {
+              <div ngClass="default-loader"></div>
+            } @else {
+              <p ngClass="mr-2">Criar conta</p>
+              <ng-icon name="lucideChevronRightSquare" size="sm" />
+            }
+          </div>
+        </button>
+
+        @if (error$ | async; as error) {
+          <h1 ngClass="text-center text-sm text-red-700">{{ error }}</h1>
+        }
+      </form>
+    </div>
+    <div
+      ngClass="flex items-center justify-center border-t border-solid border-slate-300 bg-gray-200 p-5"
+    >
+      <h1 ngClass="text-sm text-slate-500">
+        Já tem uma conta?
+        <button
+          ngClass="cursor-pointer font-bold text-[#007FEF] hover:text-[#007ECF]"
+          (click)="accessExistingAccountButtonClick()"
+        >
+          Entre na sua conta
+        </button>
+      </h1>
+    </div>
+  </div>
+</section>
